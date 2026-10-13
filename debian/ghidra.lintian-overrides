@@ -4,9 +4,12 @@
 jar-not-in-usr-share [usr/lib/ghidra/*]
 # Resource-only jars (configurations, debugger agents, processor modules).
 codeless-jar [usr/lib/ghidra/*]
-# Training exercises of the GhidraClass course: binaries to analyze, shipped
-# as built by upstream on purpose.
+# Training exercises of the GhidraClass course: x86-64 binaries to analyze,
+# shipped in every architecture's package exactly as upstream built them
+# (symbols included, see debian/rules).
 hardening-no-pie [usr/lib/ghidra/docs/GhidraClass/ExerciseFiles/*]
+unstripped-binary-or-object [usr/lib/ghidra/docs/GhidraClass/ExerciseFiles/*]
+ghidra [!amd64]: binary-from-other-architecture [usr/lib/ghidra/docs/GhidraClass/ExerciseFiles/*]
 windows-devel-file-in-package [usr/lib/ghidra/docs/GhidraClass/ExerciseFiles/*]
 windows-devel-file-in-package [usr/lib/ghidra/Ghidra/Features/PDB/src/pdb/pdb.sln]
 # The decompiler bundles its own copy of zlib (upstream source tree).
