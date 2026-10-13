@@ -19,5 +19,8 @@ ghidra (12.1.4-0lemesre1) stable; urgency=medium
       resolved locally through the XML catalog);
     - executable bit kept on ELF objects and scripts only, no empty
       debug package (native tools are built without -g).
+    - GhidraClass training binaries (x86-64 in every package) shipped as
+      upstream built them: not stripped, not processed by dh_dwz nor
+      dh_shlibdeps.
 
  -- Eric Lemesre <eric.lemesre@gmail.com>  Tue, 13 Oct 2026 08:30:00 +0200

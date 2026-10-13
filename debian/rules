@@ -75,9 +75,21 @@ endif
 			debian/ghidra/usr/share/icons/hicolor/$${s}x$${s}/apps/ghidra.png; \
 	done
 
+# Training exercises of the GhidraClass course: x86-64 binaries to analyze,
+# in every architecture's package. They must ship exactly as upstream built
+# them (symbols included), and the tools of another architecture cannot
+# process them anyway.
+EXERCISES := docs/GhidraClass/ExerciseFiles
+
 # Native tools are built without -g: their debug package would be empty.
 override_dh_strip:
-	dh_strip --no-automatic-dbgsym
+	dh_strip --no-automatic-dbgsym -X$(EXERCISES)
+
+override_dh_dwz:
+	dh_dwz -X$(EXERCISES)
+
+override_dh_shlibdeps:
+	dh_shlibdeps -X$(EXERCISES)
 
 # Upstream leaves the executable bit on sources and data files (xml, java,
 # slaspec...): keep it on ELF objects and #! scripts only.

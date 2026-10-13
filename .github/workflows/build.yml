@@ -14,6 +14,8 @@ permissions:
 jobs:
   build:
     strategy:
+      # Une architecture qui échoue ne doit pas masquer le résultat de l'autre.
+      fail-fast: false
       matrix:
         include:
           - arch: amd64

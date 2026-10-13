@@ -117,6 +117,18 @@ etape_check() {
         exit 1
     fi
     sed -n '1,15p' "$out/true.c"
+
+    log "exercices GhidraClass livrés tels que l'amont les a construits"
+    local ex=/usr/lib/ghidra/docs/GhidraClass/ExerciseFiles ref f n=0
+    ref=$(mktemp -d)
+    tar -xzf "$ORIG" -C "$ref" --strip-components=1 --wildcards '*/GhidraDocs/GhidraClass/ExerciseFiles/*'
+    while IFS= read -r -d '' f; do
+        cmp -s "$f" "$ex/${f#"$ref/GhidraDocs/GhidraClass/ExerciseFiles/"}" \
+            || { echo "ÉCHEC : exercice modifié par l'empaquetage : $f" >&2; exit 1; }
+        n=$((n + 1))
+    done < <(find "$ref/GhidraDocs/GhidraClass/ExerciseFiles" -type f -print0)
+    rm -rf "$ref"
+    echo "$n fichiers identiques à l'archive"
     log "test de fumée réussi"
 }
 
