@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Ghidra
+GenericName=Software Reverse Engineering Framework
+GenericName[fr]=Plateforme de rétro-ingénierie logicielle
+Comment=Disassemble, decompile and analyze compiled code
+Comment[fr]=Désassembler, décompiler et analyser du code compilé
+Exec=ghidra
+Icon=ghidra
+Terminal=false
+Categories=Development;Debugger;
+Keywords=reverse-engineering;disassembler;decompiler;binary;analysis;security;

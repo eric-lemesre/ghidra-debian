@@ -1,0 +1,82 @@
+# Construit le paquet pour amd64 et arm64 sur les runners hébergés de GitHub
+# (gratuits pour un dépôt public), dans Debian trixie : la même commande
+# qu'en local (README). Un tag v<version Debian> publie le résultat en
+# Release GitHub ; la veille d'apt.lemesre.org la reprend de là.
+name: build
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Seuls 14 Go de disque sont garantis : on retire les SDK préinstallés
+      # dont la construction n'a pas l'usage.
+      - name: place disque
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup \
+            /opt/hostedtoolcache/CodeQL /usr/share/swift
+          sudo docker image prune --all --force >/dev/null
+          df -h /
+
+      - name: construction et test de fumée (Debian trixie)
+        env:
+          # Sur un tag, build.sh vérifie qu'il porte la version du changelog.
+          TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+        run: |
+          . ./versions.env
+          docker run --rm -v "$PWD:/src" -w /src \
+            -e JOBS="$(nproc)" -e EXPECTED_VERSION="${TAG#v}" \
+            "$BUILD_IMAGE" ./build.sh all
+          df -h /
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ghidra-${{ matrix.arch }}
+          path: dist/
+          retention-days: 7
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: dist
+          merge-multiple: true
+      # gh crée la release en brouillon, y dépose tous les fichiers, puis la
+      # publie : la veille ne voit jamais une release à moitié remplie.
+      - name: release GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          ls -la dist
+          sed -n '1,/^ -- /p' debian/changelog > notes.md
+          gh release create "$TAG" --verify-tag --title "ghidra ${TAG#v}" \
+            --notes-file notes.md dist/*

@@ -1,0 +1,4 @@
+version=4
+opts="filenamemangle=s%.*/Ghidra_@ANY_VERSION@_build\.tar\.gz%@PACKAGE@-$1.tar.gz%" \
+  https://github.com/NationalSecurityAgency/ghidra/tags \
+  .*/Ghidra_@ANY_VERSION@_build\.tar\.gz

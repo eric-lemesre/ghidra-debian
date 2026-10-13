@@ -1,0 +1,5 @@
+work/
+dist/
+*.deb
+*.changes
+*.buildinfo

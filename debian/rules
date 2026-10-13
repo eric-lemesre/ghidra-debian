@@ -1,0 +1,100 @@
+#!/usr/bin/make -f
+# Ghidra built from source with the Gradle release pinned by upstream
+# (Ghidra/RuntimeScripts/Common/support/gradle/gradle-wrapper.properties):
+# Debian's gradle (4.x) is far too old. The build needs network access for
+# Gradle itself (checked below by SHA-256), for the non-Maven dependencies
+# of gradle/support/fetchDependencies.gradle (each one checked by SHA-256
+# upstream) and for Maven Central: fine for a third-party repository, not
+# for Debian main.
+
+include /usr/share/dpkg/architecture.mk
+
+GRADLE_VERSION := 9.7.1
+GRADLE_SHA256 := acd53f1edaf02f1a8ff99879f8a34b302661a057d9b063ae9e35b552f804d20a
+GRADLE_DIR := $(CURDIR)/debian/.gradle-dist
+GRADLE := $(GRADLE_DIR)/gradle-$(GRADLE_VERSION)/bin/gradle
+
+NJOBS := $(or $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS))),1)
+GRADLE_FLAGS := --no-daemon --console=plain --max-workers=$(NJOBS)
+
+export JAVA_HOME := /usr/lib/jvm/java-21-openjdk-$(DEB_HOST_ARCH)
+# Some bundled jars hold non-ASCII class names (jgrapht's
+# SørensenIndexLinkPrediction): under the C locale of a build chroot the JVM
+# cannot map them to paths and the distribution step fails.
+export LC_ALL := C.UTF-8
+# Gradle and the JVM write nothing into the home of the builder.
+export GRADLE_USER_HOME := $(CURDIR)/debian/.fakehome/.gradle
+export _JAVA_OPTIONS := -Duser.home=$(CURDIR)/debian/.fakehome
+
+DEST := debian/ghidra/usr/lib/ghidra
+SEVENZIP := $(DEST)/Ghidra/Features/FileFormats/data/sevenzipnativelibs
+ICONS := Ghidra/Framework/Gui/src/main/resources/images
+# 7-Zip-JBinding ships native libraries for every system; only this
+# architecture's is kept (there is none for arm64).
+SEVENZIP_KEEP := $(if $(filter amd64,$(DEB_HOST_ARCH)),Linux-amd64)
+
+%:
+	dh $@
+
+$(GRADLE):
+	mkdir -p $(GRADLE_DIR)
+	curl -fsSL --retry 3 -o $(GRADLE_DIR)/gradle.zip \
+		https://services.gradle.org/distributions/gradle-$(GRADLE_VERSION)-bin.zip
+	echo "$(GRADLE_SHA256)  $(GRADLE_DIR)/gradle.zip" | sha256sum -c -
+	cd $(GRADLE_DIR) && unzip -q gradle.zip && rm gradle.zip
+
+override_dh_auto_configure: $(GRADLE)
+	$(GRADLE) $(GRADLE_FLAGS) -I gradle/support/fetchDependencies.gradle
+
+override_dh_auto_build:
+ifeq ($(DEB_HOST_ARCH),arm64)
+	# upstream ships no prebuilt native tools for linux_arm_64
+	$(GRADLE) $(GRADLE_FLAGS) buildNatives
+endif
+	$(GRADLE) $(GRADLE_FLAGS) buildGhidra
+
+# The upstream test suite needs a display and hours. build.sh runs a smoke
+# test on the installed package instead (headless import and decompilation,
+# as an unprivileged user).
+override_dh_auto_test:
+
+override_dh_auto_install:
+	rm -rf debian/.dist
+	mkdir -p debian/.dist debian/ghidra/usr/lib
+	unzip -q build/dist/ghidra_*.zip -d debian/.dist
+	mv debian/.dist/ghidra_* $(DEST)
+	find $(SEVENZIP) -mindepth 1 -maxdepth 1 \
+		$(if $(SEVENZIP_KEEP),! -name $(SEVENZIP_KEEP)) -exec rm -rf {} +
+ifeq ($(DEB_HOST_ARCH),arm64)
+	printf '%s\n' '' '# Debian arm64: no 7-Zip-JBinding library for this architecture' \
+		'VMARGS=-Dghidra.file.formats.zip.ZipFileSystemFactory.USE_BUILTIN_ZIP_SUPPORT=true' \
+		>> $(DEST)/support/launch.properties
+endif
+	set -e; for s in 16 24 32 48 64 128 256; do \
+		install -D -m 0644 $(ICONS)/GhidraIcon$$s.png \
+			debian/ghidra/usr/share/icons/hicolor/$${s}x$${s}/apps/ghidra.png; \
+	done
+
+# Native tools are built without -g: their debug package would be empty.
+override_dh_strip:
+	dh_strip --no-automatic-dbgsym
+
+# Upstream leaves the executable bit on sources and data files (xml, java,
+# slaspec...): keep it on ELF objects and #! scripts only.
+override_dh_fixperms:
+	dh_fixperms
+	find $(DEST) -type f -perm /111 | while read -r f; do \
+		case "$$(head -c 4 "$$f" | od -An -tx1 | tr -d ' \n')" in \
+			7f454c46|2321*) ;; \
+			*) chmod a-x "$$f" ;; \
+		esac; \
+	done
+
+# Gradle is not there yet when dpkg-buildpackage cleans a fresh tree: remove
+# what the build creates (checked against the orig tarball), no source
+# directory is named build.
+override_dh_auto_clean:
+	rm -rf build dependencies .gradle \
+		debian/.gradle-dist debian/.fakehome debian/.dist
+	find Ghidra GPL GhidraBuild -type d -name build -prune -exec rm -rf {} +
+	find Ghidra/Processors -name '*.sla' -delete

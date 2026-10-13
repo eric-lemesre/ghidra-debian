@@ -1,0 +1,5 @@
+# Sample binaries and Windows driver of the upstream tree: exercises of the
+# GhidraClass course and the DMG module's low-level I/O driver, shipped as
+# data, never built or run on Linux.
+source-contains-prebuilt-windows-binary [GPL/DMG/data/os/*]
+source-contains-prebuilt-windows-binary [GhidraDocs/GhidraClass/ExerciseFiles/*]

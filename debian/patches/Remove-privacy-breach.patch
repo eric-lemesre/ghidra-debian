@@ -1,0 +1,110 @@
+From: Sophie Brun <sophie@offensive-security.com>
+Date: Wed, 28 Apr 2021 09:00:22 +0200
+Subject: Remove privacy breach
+
+---
+ GPL/licenses/LGPL_3.0.html                     | 21 ---------------------
+ licenses/Creative_Commons_Attribution_2.5.html | 16 +---------------
+ licenses/LGPL_3.0.html                         | 21 ---------------------
+ 3 files changed, 1 insertion(+), 57 deletions(-)
+
+--- a/GPL/licenses/LGPL_3.0.html
++++ b/GPL/licenses/LGPL_3.0.html
+@@ -42,27 +42,6 @@
+ 
+ <div id="null-wrapper">
+ 
+-      <div id="header">
+-        <div class="inner" style="position: relative;">
+-
+-        <h1 id="logo"><a href="/">The GNU Operating System</a></h1>
+-
+-	  <div style="position: absolute; top: -20px; right: 0; width: 344px;"><a href="http://patentabsurdity.com/watch.html" title="Watch Patent Absurdity"><img src="http://static.fsf.org/nosvn/pa-gnu.jpg" alt="" /></a>
+-	  </div>
+-
+-<!--	  	<div id="fssbox">
+-	  <h4>Sign up for the <em>Free Software Supporter</em></h4>
+-	  <p>A monthly update on GNU and the FSF</p>
+-	  <form action="http://lists.gnu.org/mailman/subscribe/info-fsf" method="post">
+-	  <p><input type="text" id="frmEmail" name="email" size="15" maxlength="80" value="you@example.com" onfocus="this.value=''" /> &nbsp; <input type="submit" value="Ok" /></p>
+-	  </form>
+-	</div>
+-
+--->
+-	
+-	</div>
+-
+-      </div>
+ 
+       <div id="navigation">
+         <div class="inner">
+--- a/licenses/Creative_Commons_Attribution_2.5.html
++++ b/licenses/Creative_Commons_Attribution_2.5.html
+@@ -5,7 +5,7 @@
+   <head>
+     <title>Creative Commons &mdash;
+       Attribution 2.5 Generic
+-    </title><link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/container/assets/skins/sam/container.css" /> 
++    </title>
+ 
+     <link rel="stylesheet" type="text/css"
+           href="/includes/deed3.css" media="screen" />
+@@ -39,28 +39,14 @@
+ 
+ 
+ 
+-    <script type="text/javascript" src="http://yui.yahooapis.com/2.6.0/build/yahoo-dom-event/yahoo-dom-event.js">
+-    </script> 
+-    <script type="text/javascript" src="http://yui.yahooapis.com/2.6.0/build/connection/connection-min.js">
+-    </script> 
+-    <script type="text/javascript" src="http://yui.yahooapis.com/2.6.0/build/json/json-min.js">
+-    </script>
+ 
+     <script type="text/javascript"
+             src="/includes/referrer/deed.js">
+     </script>
+ 
+-    <script type="text/javascript" src="http://yui.yahooapis.com/2.6.0/build/container/container-min.js">
+-    </script>
+-
+     <script type="text/javascript" src="/includes/help.js">
+     </script>
+ 
+-    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+-    <script type="text/javascript">
+-        _uacct="UA-2010376-1";  urchinTracker();
+-    </script>
+-
+    
+ 
+   </head>
+--- a/licenses/LGPL_3.0.html
++++ b/licenses/LGPL_3.0.html
+@@ -42,27 +42,6 @@
+ 
+ <div id="null-wrapper">
+ 
+-      <div id="header">
+-        <div class="inner" style="position: relative;">
+-
+-        <h1 id="logo"><a href="/">The GNU Operating System</a></h1>
+-
+-	  <div style="position: absolute; top: -20px; right: 0; width: 344px;"><a href="http://patentabsurdity.com/watch.html" title="Watch Patent Absurdity"><img src="http://static.fsf.org/nosvn/pa-gnu.jpg" alt="" /></a>
+-	  </div>
+-
+-<!--	  	<div id="fssbox">
+-	  <h4>Sign up for the <em>Free Software Supporter</em></h4>
+-	  <p>A monthly update on GNU and the FSF</p>
+-	  <form action="http://lists.gnu.org/mailman/subscribe/info-fsf" method="post">
+-	  <p><input type="text" id="frmEmail" name="email" size="15" maxlength="80" value="you@example.com" onfocus="this.value=''" /> &nbsp; <input type="submit" value="Ok" /></p>
+-	  </form>
+-	</div>
+-
+--->
+-	
+-	</div>
+-
+-      </div>
+ 
+       <div id="navigation">
+         <div class="inner">

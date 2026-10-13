@@ -1,0 +1,23 @@
+ghidra (12.1.4-0lemesre1) stable; urgency=medium
+
+  * Build from source of upstream 12.1.4 for Debian trixie and later,
+    amd64 and arm64.
+  * Packaging derived from Kali Linux (ghidra 12.1.4+ds-0kali1, Apache-2.0):
+    - Gradle pinned to the release of the upstream wrapper (9.7.1) and
+      checked by SHA-256 before use;
+    - installed in /usr/lib/ghidra, the tree holds architecture-dependent
+      native tools;
+    - desktop entry and icons, ghidra-analyzeHeadless and
+      ghidra-pyghidraRun commands;
+    - on arm64, which has no 7-Zip-JBinding library, the built-in zip
+      support is enabled for every launcher (launch.properties) instead of
+      patching ghidraRun alone;
+    - no repack: the orig tarball is the upstream tag archive;
+    - build under C.UTF-8: bundled jars hold non-ASCII class names that
+      the C locale of a build chroot cannot map to paths;
+    - SLEIGH and p-code reference manuals built as PDF (docbook-xsl,
+      resolved locally through the XML catalog);
+    - executable bit kept on ELF objects and scripts only, no empty
+      debug package (native tools are built without -g).
+
+ -- Eric Lemesre <eric.lemesre@gmail.com>  Tue, 13 Oct 2026 08:30:00 +0200

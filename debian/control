@@ -1,0 +1,47 @@
+Source: ghidra
+Section: devel
+Priority: optional
+Maintainer: Eric Lemesre <eric.lemesre@gmail.com>
+Build-Depends: debhelper-compat (= 13),
+               bison,
+               ca-certificates,
+               curl,
+               docbook-xml,
+               docbook-xsl,
+               flex,
+               fop,
+               openjdk-21-jdk-headless,
+               python3,
+               python3-pip,
+               python3-venv,
+               unzip,
+               xsltproc,
+Standards-Version: 4.7.2
+Homepage: https://github.com/NationalSecurityAgency/ghidra
+Vcs-Browser: https://github.com/eric-lemesre/ghidra-debian
+Vcs-Git: https://github.com/eric-lemesre/ghidra-debian.git
+Rules-Requires-Root: no
+
+Package: ghidra
+Architecture: amd64 arm64
+Depends: openjdk-21-jdk | openjdk-25-jdk,
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: python3,
+            python3-venv,
+Suggests: 7zip,
+          gdb,
+Description: software reverse engineering framework
+ Ghidra is a software reverse engineering (SRE) framework created and
+ maintained by the National Security Agency Research Directorate. It
+ includes a suite of full-featured, high-end software analysis tools that
+ enable users to analyze compiled code on a variety of platforms including
+ Windows, macOS, and Linux. Capabilities include disassembly, assembly,
+ decompilation, graphing, and scripting, along with hundreds of other
+ features. Ghidra supports a wide variety of processor instruction sets and
+ executable formats and can be run in both user-interactive and automated
+ (headless) modes. Users may develop their own extensions and scripts in
+ Java or Python (PyGhidra).
+ .
+ This package is built from the upstream sources, including the native
+ decompiler and SLEIGH compiler for the target architecture.

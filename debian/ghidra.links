@@ -1,0 +1,3 @@
+usr/lib/ghidra/ghidraRun usr/bin/ghidra
+usr/lib/ghidra/support/analyzeHeadless usr/bin/ghidra-analyzeHeadless
+usr/lib/ghidra/support/pyghidraRun usr/bin/ghidra-pyghidraRun

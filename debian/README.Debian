@@ -1,0 +1,32 @@
+ghidra for Debian
+-----------------
+
+The program lives in /usr/lib/ghidra, read-only. Commands:
+
+  ghidra                    graphical interface (ghidraRun)
+  ghidra-analyzeHeadless    automated analysis (support/analyzeHeadless)
+  ghidra-pyghidraRun        PyGhidra (support/pyghidraRun)
+
+Java: Ghidra needs a JDK 21 or later, not a JRE: scripts are compiled at run
+time. The launcher takes the JDK found on the PATH (update-alternatives
+--config java); if it finds no suitable one, it asks once for a JDK home and
+remembers it. Set JAVA_HOME_OVERRIDE in
+/usr/lib/ghidra/support/launch.properties to force one for every user.
+
+Release name: a build from the source tree is labelled "DEV" by upstream
+(Ghidra/application.properties), official NSA archives "PUBLIC". User
+settings therefore go to ~/.config/ghidra/ghidra_<version>_DEV, apart from
+those of an official archive install.
+
+PyGhidra: on Debian the system Python is externally managed (PEP 668), so
+ghidra-pyghidraRun offers to create a virtual environment in the user
+settings directory; python3-venv is needed for that.
+
+Extensions are installed per user (user settings directory), the read-only
+installation is never modified.
+
+arm64: 7-Zip-JBinding has no native library for this architecture. The
+built-in zip support is enabled in launch.properties, and the 7zip package
+(7z/7zz commands) lets Ghidra open other archive formats.
+
+ -- Eric Lemesre <eric.lemesre@gmail.com>  Tue, 13 Oct 2026 08:30:00 +0200

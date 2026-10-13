@@ -1,0 +1,5 @@
+Name: ghidra
+Repository: https://github.com/NationalSecurityAgency/ghidra.git
+Bug-Database: https://github.com/NationalSecurityAgency/ghidra/issues
+Repository-Browse: https://github.com/NationalSecurityAgency/ghidra
+Bug-Submit: https://github.com/NationalSecurityAgency/ghidra/issues/new

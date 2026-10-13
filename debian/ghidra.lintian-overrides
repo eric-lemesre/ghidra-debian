@@ -1,0 +1,28 @@
+# Ghidra is a self-contained Java application: its jars, launch scripts and
+# native tools live together under /usr/lib/ghidra, where the launcher
+# expects them.
+jar-not-in-usr-share [usr/lib/ghidra/*]
+# Resource-only jars (configurations, debugger agents, processor modules).
+codeless-jar [usr/lib/ghidra/*]
+# Training exercises of the GhidraClass course: binaries to analyze, shipped
+# as built by upstream on purpose.
+hardening-no-pie [usr/lib/ghidra/docs/GhidraClass/ExerciseFiles/*]
+windows-devel-file-in-package [usr/lib/ghidra/docs/GhidraClass/ExerciseFiles/*]
+windows-devel-file-in-package [usr/lib/ghidra/Ghidra/Features/PDB/src/pdb/pdb.sln]
+# The decompiler bundles its own copy of zlib (upstream source tree).
+embedded-library zlib [usr/lib/ghidra/Ghidra/Features/Decompiler/os/*/sleigh]
+# HTML documentation of bundled components: the html5shiv script is loaded by
+# Internet Explorer 8 and older only (conditional comment), the logo by the
+# YAJSW changelog page; neither is opened by Ghidra itself.
+privacy-breach-uses-embedded-file * [usr/lib/ghidra/docs/GhidraClass/Debugger/*]
+privacy-breach-logo * [usr/lib/ghidra/Ghidra/Features/GhidraServer/data/yajsw-stable-*/doc/*]
+# Velocity template of the YAJSW service wrapper, rendered into a script.
+script-not-executable [usr/lib/ghidra/Ghidra/Features/GhidraServer/data/yajsw-stable-*/templates/daemon.vm]
+# Multi-release jar: classes for Java 25 are only loaded by a Java 25 JVM.
+unknown-java-class-version * [usr/lib/ghidra/Ghidra/Framework/Generic/lib/bcprov-*.jar]
+# Packaging metadata of the PyGhidra wheel, not an executable script.
+unusual-interpreter /usr/bin/python [usr/lib/ghidra/Ghidra/Features/PyGhidra/pypkg/setup.py]
+# Upstream documents the commands in its HTML manual (Help menu, docs/).
+no-manual-page [usr/bin/ghidra]
+no-manual-page [usr/bin/ghidra-analyzeHeadless]
+no-manual-page [usr/bin/ghidra-pyghidraRun]
